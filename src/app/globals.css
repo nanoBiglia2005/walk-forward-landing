@@ -1,26 +1,515 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Tokens from the Figma file "Walk Forward - Landing Page" (Color Primitives + v2 text styles). */
+@theme {
+  --color-lime: #c0ff00;
+  --color-lime-400: #d0ff47;
+  --color-navy: #0e1a2d;
+  --color-navy-600: #2a5690;
+  --color-navy-700: #174075;
+  --color-gray-500: #757575;
+  --color-gray-700: #383838;
+  --color-red-700: #900b09;
+
+  --ease-io: cubic-bezier(0.42, 0, 0.58, 1);
+
+  /* The circuit board composition needs ~1280px; below that the single-column layout is used.
+     Keep in sync with DESKTOP_QUERY in src/lib/media.ts. */
+  --breakpoint-lg: 80rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-league-spartan), "League Spartan", system-ui, sans-serif;
+  --font-body: var(--font-questrial), "Questrial", system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---------- Type styles (Figma: V2/*, Heading, Body, Lead…) ---------- */
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 1.444rem + 4.507vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  @media (width >= 80rem) {
+    line-height: 0.96;
+    letter-spacing: -0.04em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility type-section {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 1.472rem + 2.254vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+@utility type-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+@utility type-item {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+@utility type-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@utility type-heading-sm {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility type-strong {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@utility type-strong-block {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+@utility type-strong-sm {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+@utility type-subheading {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+@utility type-lead {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+
+@utility type-body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@utility type-body-sm {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@utility type-wordmark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 13.75rem;
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+}
+
+/* ---------- Layout gutters ----------
+   Mobile: a 36rem column with 48px on the rail side and 16px on the other (Figma mobile 375).
+   Desktop: a 1200px wrap with at least 88px of gutter, so the rail (wrap − 56px) always fits.
+   Keep in sync with the rail helpers in src/components/trace/builders.ts. */
+
+@utility px-rail-l {
+  padding-left: max(3rem, calc((100% - 36rem) / 2));
+  padding-right: max(1rem, calc((100% - 36rem) / 2));
+}
+
+@utility px-rail-r {
+  padding-left: max(1rem, calc((100% - 36rem) / 2));
+  padding-right: max(3rem, calc((100% - 36rem) / 2));
+}
+
+@utility px-plain {
+  padding-inline: max(1rem, calc((100% - 36rem) / 2));
+}
+
+@utility px-wrap {
+  padding-inline: max(5.5rem, calc((100% - 75rem) / 2));
+}
+
+/* ---------- Base ---------- */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #000;
+    color: #000;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible,
+  .sr-focus:focus-visible + * {
+    outline: 3px solid var(--ring, currentColor);
+    outline-offset: 2px;
+  }
+
+  [id] {
+    scroll-margin-top: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* ---------- Buttons: background change + label underline (200ms) ---------- */
+
+.btn-label {
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 200ms var(--ease-io);
+}
+
+.btn:not(:disabled):hover .btn-label,
+.link-underline:hover {
+  text-decoration-color: currentColor;
+}
+
+.link-underline {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 200ms var(--ease-io);
+}
+
+/* ---------- Collapsible (accordion + mobile filters): height 300ms ease-in-out ---------- */
+
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 300ms var(--ease-io),
+    visibility 0s linear 300ms;
+}
+
+.collapse[data-open="true"],
+html:not(.js) .collapse {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 300ms var(--ease-io),
+    visibility 0s linear 0s;
+}
+
+.collapse > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (width >= 80rem) {
+  .collapse {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition: none;
+  }
+
+  .collapse > * {
+    overflow: visible;
+  }
+}
+
+/* ---------- Services board: filter dimming (desktop) ---------- */
+
+[data-zone],
+.trace [data-group] {
+  transition: opacity 300ms var(--ease-io);
+}
+
+[data-filter="hardware"] [data-zone]:not([data-zone="hardware"]),
+[data-filter="hardware"] .trace [data-group]:not([data-group="hardware"]),
+[data-filter="software"] [data-zone]:not([data-zone="software"]),
+[data-filter="software"] .trace [data-group]:not([data-group="software"]),
+[data-filter="experts"] [data-zone]:not([data-zone="experts"]),
+[data-filter="experts"] .trace [data-group]:not([data-group="experts"]) {
+  opacity: 0.2;
+}
+
+/* ---------- Chip pins (SGM) ---------- */
+
+.pins {
+  position: absolute;
+  left: 24px;
+  right: 0;
+  height: 16px;
+  background-image: linear-gradient(to right, var(--color-lime) 12px, transparent 12px);
+  background-size: 48px 100%;
+  background-repeat: round no-repeat;
+}
+
+.pins-top {
+  top: -16px;
+}
+
+.pins-bottom {
+  bottom: -16px;
+}
+
+@media (width >= 80rem) {
+  .pins {
+    left: 40px;
+    right: 60px;
+    height: 20px;
+    background-image: linear-gradient(to right, var(--color-lime) 14px, transparent 14px);
+    background-size: 44px 100%;
+  }
+
+  .pins-top {
+    top: -20px;
+  }
+
+  .pins-bottom {
+    bottom: -20px;
+  }
+}
+
+/* ---------- Carousels: 40s linear loop, row 2 reversed, pause on hover/focus/button ---------- */
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+}
+
+.marquee-line {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(50% - 1.5px);
+  height: 3px;
+}
+
+.marquee-track {
+  position: relative;
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee[data-direction="right"] .marquee-track {
+  animation-direction: reverse;
+}
+
+.marquee-track > ul {
+  display: flex;
+  align-items: center;
+  gap: var(--marquee-gap);
+  padding-right: var(--marquee-gap);
+}
+
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track,
+[data-paused="true"] .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Circuit traces ---------- */
+
+.trace {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.trace-path {
+  fill: none;
+  stroke-width: 3;
+  stroke-linejoin: miter;
+}
+
+.tone-lime {
+  stroke: var(--color-lime);
+}
+
+.tone-ink {
+  stroke: #000;
+}
+
+.tone-navy {
+  stroke: var(--color-navy-700);
+}
+
+.via {
+  stroke-width: 4;
+  fill: var(--via-fill);
+  stroke: var(--via-stroke);
+}
+
+.via-lime {
+  --via-fill: var(--color-lime);
+  --via-stroke: #000;
+}
+
+.via-navy {
+  --via-fill: var(--color-navy);
+  --via-stroke: var(--color-lime);
+}
+
+.via-white {
+  --via-fill: #fff;
+  --via-stroke: var(--color-navy-700);
+}
+
+@keyframes trace-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* A via is "unlit" (solid) until its trace reaches it, then pulses to its surface fill (300ms). */
+@keyframes via-pulse {
+  from {
+    fill: var(--via-stroke);
+  }
+  to {
+    fill: var(--via-fill);
+  }
+}
+
+@keyframes cue-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 16px));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .trace-path.mode-load {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: trace-draw var(--dur) var(--ease-io) var(--delay) forwards;
+  }
+
+  .js .trace-path.mode-scroll:not([data-live]) {
+    visibility: hidden;
+  }
+
+  .js .via-scroll:not(.is-live) {
+    fill: var(--via-stroke);
+  }
+
+  .js .via-scroll.is-live {
+    animation: via-pulse 300ms var(--ease-io);
+  }
+
+  .js .via-load {
+    animation: via-pulse 300ms var(--ease-io) var(--at) both;
+  }
+
+  /* Featured services appear when the bus reaches their via (200ms). Fallback shows them anyway. */
+  .js [data-cue] {
+    opacity: 0;
+    animation: cue-in 200ms var(--ease-io) 3s forwards;
+  }
+
+  .js [data-cue].is-cued {
+    animation: cue-in 200ms var(--ease-io) var(--cue) forwards;
+  }
+
+  /* Hero intro: fade + 16px, 600ms, staggered 100ms. */
+  .rise {
+    animation: rise 600ms var(--ease-io) calc(100ms * var(--i, 0)) both;
+  }
+
+  /* Board: outlines draw in 800ms, rows fade + 24px staggered 80ms, pins sweep in 600ms. */
+  .js [data-reveal] .zone-outline {
+    clip-path: inset(0 100% 100% 0);
+    transition: clip-path 800ms var(--ease-io);
+  }
+
+  .js [data-reveal] [data-row] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 600ms var(--ease-io),
+      transform 600ms var(--ease-io);
+    transition-delay: calc(80ms * var(--i, 0));
+  }
+
+  .js [data-reveal] .pins {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 600ms var(--ease-io);
+  }
+
+  .js [data-reveal][data-shown] .zone-outline,
+  .js [data-reveal][data-shown] .pins {
+    clip-path: inset(0);
+  }
+
+  .js [data-reveal][data-shown] [data-row] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .marquee-track > ul[aria-hidden="true"] {
+    display: none;
+  }
+
+  /* Static rows start at the content edge so the junction via does not cover a name. */
+  @media (width >= 80rem) {
+    .marquee-track {
+      padding-left: max(5.5rem, calc((100% - 75rem) / 2));
+    }
+  }
 }
