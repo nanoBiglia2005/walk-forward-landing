@@ -337,14 +337,50 @@ html:not(.js) .collapse {
 }
 
 .marquee:hover .marquee-track,
-.marquee:focus-within .marquee-track,
 [data-paused="true"] .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Keyboard focus only: a clicked logo keeps focus (it opens in another tab) and :focus-within would
+   leave the row paused until the user clicks elsewhere. Separate rule so a browser without :has()
+   drops only this one. */
+.marquee:has(:focus-visible) .marquee-track {
   animation-play-state: paused;
 }
 
 @keyframes marquee {
   to {
     transform: translateX(-50%);
+  }
+}
+
+/* Lists too short to loop on a wide screen (clients): fixed, centred rows without line or copy.
+   The 60rem limit splits the current clients 4 + 3. */
+@media (width >= 80rem) {
+  [data-static="desktop"] .marquee {
+    height: auto;
+    overflow: visible;
+  }
+
+  [data-static="desktop"] .marquee-line,
+  [data-static="desktop"] .marquee-track > ul[aria-hidden="true"] {
+    display: none;
+  }
+
+  [data-static="desktop"] .marquee-track {
+    width: auto;
+    height: auto;
+    padding-left: 0;
+    animation: none;
+  }
+
+  [data-static="desktop"] .marquee-track > ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 2rem;
+    max-width: 60rem;
+    margin-inline: auto;
+    padding-right: 0;
   }
 }
 

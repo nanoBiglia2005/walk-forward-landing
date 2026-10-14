@@ -7,7 +7,7 @@ export function Brands() {
   return (
     <section id="marcas" className="relative bg-lime px-plain py-16 [--ring:#000] lg:px-0 lg:pt-28 lg:pb-[68px]">
       <div className="lg:px-wrap">
-        <h2 className="pr-8 type-heading lg:max-w-[760px] lg:pr-0 lg:type-title">{brands.title}</h2>
+        <h2 data-a="brands-title" className="pr-8 type-heading lg:max-w-[760px] lg:pr-0 lg:type-title">{brands.title}</h2>
       </div>
       <MarqueeGroup
         label="marcas"

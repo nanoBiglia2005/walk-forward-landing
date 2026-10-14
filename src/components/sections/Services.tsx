@@ -70,7 +70,7 @@ export function Services() {
           <h2 className="type-section lg:max-w-[760px]">{servicesSection.title}</h2>
           <fieldset className="min-w-0">
             <legend className="sr-only">{servicesSection.filtersLabel}</legend>
-            <div className="-m-[5px] flex gap-2 overflow-x-auto p-[5px] [scrollbar-width:none] lg:gap-3 lg:overflow-visible">
+            <div className="flex flex-wrap gap-2 lg:gap-3">
               {servicesSection.categories.map((category) => (
                 <label key={category.id} className="shrink-0 cursor-pointer">
                   <input
@@ -81,7 +81,7 @@ export function Services() {
                     onChange={() => setFilter(category.id)}
                     className="peer sr-only sr-focus"
                   />
-                  <span className="block border-2 border-white/40 px-6 py-3 type-strong whitespace-nowrap transition-colors duration-200 ease-io hover:border-white peer-checked:border-lime peer-checked:bg-lime peer-checked:text-black">
+                  <span className="block border-2 border-white/40 px-4 py-3 lg:px-6 type-strong whitespace-nowrap transition-colors duration-200 ease-io hover:border-white peer-checked:border-lime peer-checked:bg-lime peer-checked:text-black">
                     {category.label}
                   </span>
                 </label>
@@ -111,14 +111,18 @@ export function Services() {
 function Zone({ id, label, open, children }: { id: Category; label: string; open: boolean; children: ReactNode }) {
   return (
     <div className="collapse" data-open={open} data-zone={id}>
-      <div className="pt-12 lg:h-full lg:pt-0">
-        <div data-zone-box={id} data-reveal="" className="relative px-5 pt-7 pb-2 lg:h-full lg:p-12">
-          {/* Silkscreen outline of the zone, drawn on entry. */}
-          <svg className="zone-outline absolute inset-0 size-full" aria-hidden="true" focusable="false">
-            <rect width="100%" height="100%" fill="none" stroke="var(--color-navy-600)" strokeWidth="2" strokeDasharray="4 4" />
-          </svg>
-          <h3 className="absolute -top-2.5 left-4 bg-navy px-2 type-strong text-lime lg:left-10">{label}</h3>
-          <div className="relative">{children}</div>
+      {/* The collapsing child has no padding: a box can't be shorter than its padding, so the
+          spacing lives one level down and a hidden zone takes no space. */}
+      <div className="lg:h-full">
+        <div className="pt-12 lg:h-full lg:pt-0">
+          <div data-zone-box={id} data-reveal="" className="relative px-5 pt-7 pb-2 lg:h-full lg:p-12">
+            {/* Silkscreen outline of the zone, drawn on entry. */}
+            <svg className="zone-outline absolute inset-0 size-full" aria-hidden="true" focusable="false">
+              <rect width="100%" height="100%" fill="none" stroke="var(--color-navy-600)" strokeWidth="2" strokeDasharray="4 4" />
+            </svg>
+            <h3 className="absolute -top-2.5 left-4 bg-navy px-2 type-strong text-lime lg:left-10">{label}</h3>
+            <div className="relative">{children}</div>
+          </div>
         </div>
       </div>
     </div>

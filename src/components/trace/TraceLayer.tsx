@@ -131,7 +131,9 @@ export function TraceLayer({ name }: { name: TraceName }) {
       });
     };
     const resize = new ResizeObserver(update);
-    resize.observe(section);
+    // Border box: between 608 and 1279px the gutters absorb the width change and the content box
+    // stays 576px wide, but the rails still move with the section's full width.
+    resize.observe(section, { box: "border-box" });
     section.querySelectorAll("[data-a]").forEach((el) => resize.observe(el));
     desktop.addEventListener("change", update);
     window.addEventListener("trace:refresh", update);

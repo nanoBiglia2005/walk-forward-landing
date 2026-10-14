@@ -174,27 +174,32 @@ function services(m: Measure): TraceSpec | null {
   };
 }
 
+/** Brands stub: 24px towards the title, with a 12px chamfer. */
+const BRANDS_STUB = 24;
+const BRANDS_CHAMFER = 12;
+
 function brands(m: Measure): TraceSpec | null {
-  const line = m.one('[data-a="marquee-line"]');
-  if (!line) return null;
+  const title = m.one('[data-a="brands-title"]');
+  if (!title) return null;
+  // The rail runs left of the title on desktop and right of it on mobile; it turns towards the text
+  // at the title's middle (between its two lines) and stops short of it.
   const x = m.desktop ? deskRail(m.w) : railRight(m.w);
+  const dir = m.desktop ? 1 : -1;
+  const y = title.cy;
+  const end = x + dir * BRANDS_STUB;
   return {
-    paths: [{ pts: [[x, 0], [x, line.cy]], tone: "ink", mode: "scroll" }],
-    vias: [{ x, y: line.cy, variant: "lime" }],
+    paths: [
+      {
+        pts: [[x, 0], [x, y - BRANDS_CHAMFER], [x + dir * BRANDS_CHAMFER, y], [end, y]],
+        tone: "ink",
+        mode: "scroll",
+      },
+    ],
+    vias: [{ x: end, y, variant: "lime" }],
   };
 }
 
-function clients(m: Measure): TraceSpec | null {
-  const line = m.one('[data-a="marquee-line"]');
-  if (!line) return null;
-  if (m.desktop) return { paths: [], vias: [{ x: wrapPad(m.w) - 33, y: line.cy, variant: "white" }] };
-  const x = railRight(m.w);
-  return {
-    paths: [{ pts: [[x, line.cy], [x, m.h]], tone: "navy", mode: "scroll" }],
-    vias: [{ x, y: line.cy, variant: "white" }],
-  };
-}
-
+// Clients has no trace: the circuit resumes at the top edge of contact.
 function contact(m: Measure): TraceSpec | null {
   const button = m.one('[data-a="submit"]');
   const info = m.one('[data-a="contact-info"]');
@@ -233,6 +238,6 @@ function contact(m: Measure): TraceSpec | null {
   };
 }
 
-export const builders = { hero, services, brands, clients, contact };
+export const builders = { hero, services, brands, contact };
 
 export type TraceName = keyof typeof builders;

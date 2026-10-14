@@ -13,6 +13,8 @@ type MarqueeGroupProps = {
   /** Used in the pause button label, e.g. "marcas". */
   label: string;
   tone: "brands" | "clients";
+  /** On desktop, show the items as fixed centred rows (no loop, no line, no pause button). */
+  staticOnDesktop?: boolean;
   className?: string;
   controlClassName?: string;
 };
@@ -24,10 +26,10 @@ const tones = {
 
 /**
  * Logos (or names, while a logo is missing) running over their trace (40s per loop). Pauses on
- * hover, on focus and with an accessible button; with reduced motion the rows become manually
+ * hover, on keyboard focus and with an accessible button; with reduced motion the rows become manually
  * scrollable.
  */
-export function MarqueeGroup({ rows, label, tone, className, controlClassName }: MarqueeGroupProps) {
+export function MarqueeGroup({ rows, label, tone, staticOnDesktop, className, controlClassName }: MarqueeGroupProps) {
   const [paused, setPaused] = useState(false);
   const colors = tones[tone];
   // The second copy only makes the loop seamless: hidden from screen readers and out of the Tab
@@ -66,7 +68,8 @@ export function MarqueeGroup({ rows, label, tone, className, controlClassName }:
   );
 
   return (
-    <div className={className} data-paused={paused}>
+    // The layout switch lives in globals.css ([data-static="desktop"]): one markup for both widths.
+    <div className={className} data-paused={paused} data-static={staticOnDesktop ? "desktop" : undefined}>
       <div className="flex flex-col gap-8">
         {rows.map((row, i) => (
           <div
@@ -74,7 +77,7 @@ export function MarqueeGroup({ rows, label, tone, className, controlClassName }:
             className="marquee h-14 [--marquee-gap:32px] lg:h-[72px] lg:[--marquee-gap:48px]"
             data-direction={row.direction}
           >
-            <span aria-hidden="true" className={`marquee-line ${colors.line}`} data-a={i === 0 ? "marquee-line" : undefined} />
+            <span aria-hidden="true" className={`marquee-line ${colors.line}`} />
             <div className="marquee-track">
               {list(row.items, false)}
               {list(row.items, true)}
@@ -82,7 +85,7 @@ export function MarqueeGroup({ rows, label, tone, className, controlClassName }:
           </div>
         ))}
       </div>
-      <div className={`mt-6 motion-reduce:hidden ${controlClassName ?? ""}`}>
+      <div className={`mt-6 motion-reduce:hidden ${staticOnDesktop ? "lg:hidden" : ""} ${controlClassName ?? ""}`}>
         <button
           type="button"
           onClick={() => setPaused((p) => !p)}

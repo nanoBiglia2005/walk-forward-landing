@@ -19,7 +19,7 @@ Landing page para hosting en WNPower.
 ## Pendientes antes de publicar
 
 - **Formulario de contacto**: hoy valida y muestra la confirmación, pero no envía nada. Conectar el servicio de mail en `src/lib/inquiry.ts`.
-- **Carruseles**: GOP, HP y Belgrano Cargas y Logística se muestran como texto hasta tener su logo y sitio. Para sumarlos: archivo en `public/logos/` y `logo` + `url` en `src/content/site.ts`.
+- **Carruseles**: todas las marcas y clientes tienen logo y sitio. Una entidad nueva sin logo se muestra como texto; para sumarle el logo: archivo en `public/logos/` y `logo` + `url` (y `dark: true` si el logo es claro) en `src/content/site.ts`.
 
 ## Desarrollo
 
