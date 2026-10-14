@@ -18,6 +18,7 @@ export function WhatsAppFloat() {
       <span className="max-w-0 overflow-hidden type-strong whitespace-nowrap transition-[max-width,padding] duration-300 ease-io group-hover:max-w-32 group-hover:pr-6 group-focus-visible:max-w-32 group-focus-visible:pr-6">
         WhatsApp
       </span>
+      <span className="sr-only"> (se abre en otra pestaña)</span>
     </a>
   );
 }

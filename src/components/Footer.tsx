@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Logo } from "@/components/ui/Logo";
+import { BASE_PATH } from "@/lib/base-path";
 import { footer, links, nav, sgm } from "@/content/site";
 
 export function Footer() {
@@ -31,7 +32,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="flex items-center gap-4 self-start lg:w-40 lg:flex-col lg:items-start lg:gap-3"
           >
-            <Image src="/arca/data-fiscal.png" alt="" width={239} height={327} className="h-auto w-20 lg:w-24" />
+            <Image src={`${BASE_PATH}/arca/data-fiscal.png`} alt="" width={239} height={327} className="h-auto w-20 lg:w-24" />
             <span className="link-underline type-body-sm text-white/80">
               {footer.arcaLabel}
               <span className="sr-only"> (se abre en otra pestaña)</span>

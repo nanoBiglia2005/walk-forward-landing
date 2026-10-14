@@ -1,5 +1,6 @@
 import { TraceLayer } from "@/components/trace/TraceLayer";
 import { clients } from "@/content/site";
+import { withLogoSizes } from "@/lib/logo-size";
 import { MarqueeGroup } from "./MarqueeGroup";
 
 export function Clients() {
@@ -12,7 +13,7 @@ export function Clients() {
       <MarqueeGroup
         label="clientes"
         tone="clients"
-        rows={[{ items: clients.items, direction: "left" }]}
+        rows={[{ items: withLogoSizes(clients.items), direction: "left" }]}
         className="mt-6 lg:mt-10"
         controlClassName="pl-8 text-navy lg:flex lg:justify-center lg:pl-0"
       />

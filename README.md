@@ -19,8 +19,7 @@ Landing page para hosting en WNPower.
 ## Pendientes antes de publicar
 
 - **Formulario de contacto**: hoy valida y muestra la confirmación, pero no envía nada. Conectar el servicio de mail en `src/lib/inquiry.ts`.
-- **WhatsApp**: los botones no tienen enlace. Para activarlos, completar `links.whatsapp` en `src/content/site.ts` (por ejemplo `https://wa.me/5491122945551`).
-- **Carruseles**: muestran los nombres; faltan los logos de marcas y clientes.
+- **Carruseles**: GOP, HP y Belgrano Cargas y Logística se muestran como texto hasta tener su logo y sitio. Para sumarlos: archivo en `public/logos/` y `logo` + `url` en `src/content/site.ts`.
 
 ## Desarrollo
 
@@ -37,4 +36,17 @@ Abrí [http://localhost:3000](http://localhost:3000) en el navegador.
 npm run build
 ```
 
-Esto genera la carpeta `out/` con los archivos estáticos listos para subir a WNPower.
+Esto genera la carpeta `out/` con los archivos estáticos.
+
+## Vista previa en GitHub Pages (temporal)
+
+Mientras el cliente revisa la página, el sitio se publica en `https://nanobiglia2005.github.io/walk-forward-landing/` con cada push a `master` (workflow en `.github/workflows/deploy-pages.yml`). Requiere, una sola vez, en GitHub: Settings → Pages → Source → "GitHub Actions".
+
+GitHub Pages sirve el sitio bajo `/walk-forward-landing`, por eso `src/lib/base-path.ts` define `BASE_PATH`, que usan `next.config.ts` (`basePath`) y las imágenes.
+
+## Pasar a WNPower
+
+1. En `src/lib/base-path.ts`, cambiar `BASE_PATH` a `""` (WNPower sirve el sitio en la raíz del dominio).
+2. Borrar `.github/workflows/deploy-pages.yml` si se deja de usar GitHub Pages.
+3. `npm run build` y comprimir el **contenido** de `out/` (en PowerShell: `Compress-Archive -Path out\* -DestinationPath walk-forward.zip`).
+4. En el cPanel de WNPower: Administrador de archivos → `public_html` → subir el zip → Extraer, de modo que `index.html` quede directamente en `public_html`.

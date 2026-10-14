@@ -1,9 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
+import { BASE_PATH } from "@/lib/base-path";
+import type { SizedEntity } from "@/lib/logo-size";
 
-type Row = { items: readonly string[]; direction: "left" | "right" };
+type Row = { items: readonly SizedEntity[]; direction: "left" | "right" };
 
 type MarqueeGroupProps = {
   rows: Row[];
@@ -20,19 +23,45 @@ const tones = {
 };
 
 /**
- * Names running over their trace (40s per loop). Pauses on hover and with an accessible button;
- * with reduced motion the rows become manually scrollable.
+ * Logos (or names, while a logo is missing) running over their trace (40s per loop). Pauses on
+ * hover, on focus and with an accessible button; with reduced motion the rows become manually
+ * scrollable.
  */
 export function MarqueeGroup({ rows, label, tone, className, controlClassName }: MarqueeGroupProps) {
   const [paused, setPaused] = useState(false);
   const colors = tones[tone];
-  const list = (items: readonly string[], hidden: boolean) => (
+  // The second copy only makes the loop seamless: hidden from screen readers and out of the Tab
+  // order, but its links still respond to clicks because it is on screen half of the cycle.
+  const list = (items: readonly SizedEntity[], hidden: boolean) => (
     <ul aria-hidden={hidden || undefined}>
-      {items.map((name) => (
-        <li key={name} className={`px-3 type-heading-sm whitespace-nowrap lg:px-5 lg:type-item ${colors.item}`}>
-          {name}
-        </li>
-      ))}
+      {items.map(({ name, logo, url, dark, width, height }) =>
+        logo && url && width && height ? (
+          <li key={name}>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={hidden ? -1 : undefined}
+              className={`flex h-11 items-center border-2 border-black px-4 transition-[scale] duration-200 ease-io hover:scale-105 focus-visible:scale-105 motion-reduce:transition-none lg:h-14 lg:px-5 ${dark ? "bg-navy" : "bg-white"}`}
+            >
+              {/* Real size read at build time: the space reserved before loading is final, so the
+                  row keeps its width while it moves (a percentage transform would jump otherwise). */}
+              <Image
+                src={`${BASE_PATH}${logo}`}
+                alt={name}
+                width={width}
+                height={height}
+                className="h-6 w-auto max-w-[120px] object-contain lg:h-8 lg:max-w-[160px]"
+              />
+              <span className="sr-only"> (se abre en otra pestaña)</span>
+            </a>
+          </li>
+        ) : (
+          <li key={name} className={`px-3 type-heading-sm whitespace-nowrap lg:px-5 lg:type-item ${colors.item}`}>
+            {name}
+          </li>
+        ),
+      )}
     </ul>
   );
 

@@ -1,5 +1,6 @@
 import { TraceLayer } from "@/components/trace/TraceLayer";
 import { brands } from "@/content/site";
+import { withLogoSizes } from "@/lib/logo-size";
 import { MarqueeGroup } from "./MarqueeGroup";
 
 export function Brands() {
@@ -12,8 +13,8 @@ export function Brands() {
         label="marcas"
         tone="brands"
         rows={[
-          { items: brands.rows[0], direction: "left" },
-          { items: brands.rows[1], direction: "right" },
+          { items: withLogoSizes(brands.rows[0]), direction: "left" },
+          { items: withLogoSizes(brands.rows[1]), direction: "right" },
         ]}
         className="mt-8 lg:mt-[72px]"
         controlClassName="lg:px-wrap"

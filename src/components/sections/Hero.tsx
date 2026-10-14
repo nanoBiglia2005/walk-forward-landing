@@ -25,6 +25,7 @@ export function Hero() {
           <div className="rise flex flex-col gap-3 lg:flex-row lg:gap-4" style={stagger(3)}>
             <Button href={links.whatsapp} icon="whatsapp" target="_blank" rel="noopener noreferrer">
               {hero.whatsappCta}
+              <span className="sr-only"> (se abre en otra pestaña)</span>
             </Button>
             <Button href="#servicios" variant="outline-ink">
               {hero.servicesCta}

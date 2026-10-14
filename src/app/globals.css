@@ -314,8 +314,11 @@ html:not(.js) .collapse {
   height: 3px;
 }
 
+/* Above the trace layer (.trace, z-index 2) so logos cover the junction via as they pass;
+   .marquee-line stays below, so the via still sits on the line in the gaps. */
 .marquee-track {
   position: relative;
+  z-index: 3;
   display: flex;
   width: max-content;
   height: 100%;

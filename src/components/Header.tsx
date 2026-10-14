@@ -113,6 +113,7 @@ export function Header() {
         <div className="hidden lg:block">
           <Button href={links.whatsapp} variant="lime" size="sm" icon="whatsapp" target="_blank" rel="noopener noreferrer">
             {WHATSAPP_LABEL}
+            <span className="sr-only"> (se abre en otra pestaña)</span>
           </Button>
         </div>
 
@@ -153,6 +154,7 @@ export function Header() {
         </nav>
         <Button href={links.whatsapp} variant="lime" icon="whatsapp" target="_blank" rel="noopener noreferrer" className="mt-8 w-full">
           {WHATSAPP_LABEL}
+          <span className="sr-only"> (se abre en otra pestaña)</span>
         </Button>
       </div>
     </header>
